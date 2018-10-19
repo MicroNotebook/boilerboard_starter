@@ -122,8 +122,6 @@ if not sta_if.isconnected():
 print('network config:', sta_if.ifconfig())
 ```
 
-### Tips
-
 ### Docs
 #### Buttons
 Button presses using the boilerboard.py library use integers in python. [Check](https://github.com/MicroNotebook/boilerboard_starter/blob/master/boilerboard.py#L61) boilerboard.py in the Buttons class for the conversion. Note: const() is a micropython function to save memory, but doesn't matter that much.
@@ -142,6 +140,9 @@ b.screen.lcd.fill(0)
 Some other functions that the screen object offer are `rect()`, `box()`, `hline()`, `vline()`, etc. Check out the class [here](https://github.com/MicroNotebook/boilerboard_starter/blob/master/boilerboard.py#L148).
 
 The lcd object under screen offers direct acces to the screen, which has functions like `fill()`, `pixel()`, `show()`.
+
+Remember to always call `show()` on the screen lcd to update any changes!
+`b.screen.lcd.show()`
 
 ### Troubleshooting
 * If you can't get micropython running on the board, e.g. picocom/putty into the board does not work, try reflashing micropython.
