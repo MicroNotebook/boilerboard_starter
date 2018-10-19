@@ -34,5 +34,28 @@ while True:
   time.sleep(.1)
 ```
 
+#### Connecting to the internet
+> Note: this doesn't use the boilerboard library, but you can integrate it if you want!
+```python3
+# Imports
+import network
+
+# Initialize network hardware
+sta_if = network.WLAN(network.STA_IF)
+
+# Connect
+if not sta_if.isconnected():
+  print('connecting to network...')
+  # Activate network scanning
+  sta_if.active(True)
+  # Connect to the network (<essid> is the network name e.g. BoilerMake24 and <password> is the password)
+  sta_if.connect('<essid>', '<password>')
+  # Wait till connected
+  while not sta_if.isconnected():
+    pass
+# Print network info
+print('network config:', sta_if.ifconfig())
+```
+
 ### Troubleshooting
 * If you can't get micropython running on the board, e.g. picocom/putty into the board does not work, try reflashing micropython.
