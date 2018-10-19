@@ -133,7 +133,7 @@ b = Boilerboard()
 # Clear the screen (0 is the color, which is blank)
 b.screen.clear(0)
 # To access the raw lcd, use screen.lcd
-# This is the equivalend of the above line
+# This is the equivalent of the above line
 b.screen.lcd.fill(0)
 ```
 
