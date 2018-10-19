@@ -1,13 +1,19 @@
-from boilerboard import Boilerboard
+# Imports
 import time
+from boilerboard import Boilerboard
 
+# Initialize boilerboard class
 b = Boilerboard()
-b.screen.lcd.fill(1)
-b.screen.lcd.show()
 
+# Infinite loop
 while True:
-    p = b.irq.get_pressed_button()
-    if p is not None:
-        print(str(p))
-    time.sleep(.1)
 
+  # Get a pressed button
+  button = b.irq.get_pressed_button()
+
+  # Print button press if button is not None
+  if button is not None:
+    print(str(button))
+
+  # Sleep to save battery/CPU
+  time.sleep(.1)
