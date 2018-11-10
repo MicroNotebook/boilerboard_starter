@@ -124,26 +124,27 @@ print('network config:', sta_if.ifconfig())
 
 ### Docs
 #### Buttons
-Button presses using the boilerboard.py library use integers in python. [Check](https://github.com/MicroNotebook/boilerboard_starter/blob/master/boilerboard.py#L61) boilerboard.py in the Buttons class for the conversion. Note: const() is a micropython function to save memory, but doesn't matter that much.
+Button presses using the boilerboard.py library use integers in python. Check [boilerboard.py](https://github.com/MicroNotebook/boilerboard_starter/blob/master/boilerboard.py#L61) in the Buttons class for the conversion. Note: const() is a micropython function to save memory, but doesn't matter that much.
 
 #### The Screen
 The screen is accessed by accessing your Boilerboard variable screen like:
 ```python3
 b = Boilerboard()
 # Clear the screen (0 is the color, which is blank)
-b.screen.clear(0)
-# To access the raw lcd, use screen.lcd
-# This is the equivalent of the above line
-b.screen.lcd.fill(0)
+b.screen.fill(0)
+# Draw pixel at 5, 5
+b.screen.pixel(5, 5, 1)
+# Write text at 10, 10
+b.screen.text('Test', 10l, 10)
+# Show the changes (always do this after making any changes to the screen)
+b.screen.show()
 ```
 
 Some other functions that the screen object offer are `rect()`, `box()`, `hline()`, `vline()`, etc. Check out the class [here](https://github.com/MicroNotebook/boilerboard_starter/blob/master/boilerboard.py#L148).
 
-The lcd object under screen offers direct acces to the screen, which has functions like `fill()`, `pixel()`, `show()`.
-
 Remember to always call `show()` on the screen lcd to update any changes!
-`b.screen.lcd.show()`
+`b.screen.show()`
 
 ### Troubleshooting
 * If you can't get micropython running on the board, e.g. picocom/putty into the board does not work, try reflashing micropython.
-* If nothing is showing on the screen, make sure that you call `screen.lcd.show()` to flush changes.
+* If nothing is showing on the screen, make sure that you call `screen.show()` to flush changes.

@@ -221,17 +221,29 @@ class Screen:
         self.vline(xs, ys, yd, color)
         self.vline(xd, ys, yd, color)
 
-    def clear(self, color):
-        """
-        Clears the entire screen to color (1 for filled, 0 for not)
-        """
-        self.lcd.fill(color)
-
     def text(self, text, x, y):
         """
         Write text to the screen at coordinates x,y
         """
         self.lcd.text(text, x, y)
+
+    def fill(self, color):
+        """
+        Fills the entire screen to color (1 for filled, 0 for not)
+        """
+        self.lcd.fill(color)
+
+    def pixel(self, x, y, color):
+        """
+        Places a pixel at coordinates x, y with color
+        """
+        self.lcd.pixel(x, y, color)
+
+    def show(self):
+        """
+        Call this after making any changes
+        """
+        self.lcd.show()
 
 class Boilerboard:
     """
