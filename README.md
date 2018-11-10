@@ -73,7 +73,7 @@ while True:
         continue
 
     # Clear screen
-    b.screen.clear(0)
+    b.screen.fill(0)
 
     # Write text to the screen
     b.screen.lcd.text('Button Press', 0, 0)
