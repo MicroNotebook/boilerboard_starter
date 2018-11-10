@@ -5,6 +5,10 @@ from micropython import const
 from ssd1306 import SSD1306_I2C
 
 class PCF8574:
+    """
+    This is the driver class for the IO expander that connects to all the buttons on the board.
+    This class doesn't really need to be touched.
+    """
     def __init__(self, i2c, address):
         self._i2c = i2c
         self._address = address
@@ -20,6 +24,7 @@ class PCF8574:
         self._i2c.writeto(self._address, bytes([self._output | self._input_mask]))
 
     def read(self, pin):
+        """Read a pin"""
         bit_mask = 1 << pin
         self._input_mask |= bit_mask
         self._output &= ~bit_mask
@@ -28,6 +33,7 @@ class PCF8574:
         return (self._input & bit_mask) >> pin
 
     def read8(self):
+        """Read all the pins"""
         self._input_mask = 0xFF
         self._output = 0
         self._write()
@@ -35,12 +41,14 @@ class PCF8574:
         return self._input
 
     def write(self, pin, value):
+        """Write a value to a pin"""
         bit_mask = 1 << pin
         self._input_mask &= ~bit_mask
         self._output = self._output | bit_mask if value else self._output & (~bit_mask)
         self._write()
 
     def write8(self, value):
+        """Write to all the pins"""
         self._input_mask = 0
         self._output = value
         self._write()
@@ -52,12 +60,18 @@ class PCF8574:
         self.write8(0x0)
 
     def toggle(self, pin):
+        """Toggle a pin"""
         bit_mask = 1 << pin
         self._input_mask &= ~bit_mask
         self._output ^= bit_mask
         self._write()
 
 class Buttons:
+    """
+    This class represents the buttons on the Boilerboard.
+    Constants are class variables: `Buttons.UP` 
+    """
+
     UP = const(0)
     RIGHT = const(1)
     DOWN = const(2)
@@ -71,6 +85,12 @@ class Buttons:
         self.set_led_state(0)
 
     def read_pressed_button(self):
+        """
+        Synchronously read from the pins
+        If nothing is pressed, returns None
+        Note: This function should not be called directly.
+        Use your IRQ.get_pressed_button()
+        """
         b = self.pcf.read8()
         self.set_led_state(0)
         if not (b & 0b1000000):
@@ -89,15 +109,30 @@ class Buttons:
             return A
 
     def get_led_state(self):
+        """
+        Gets current state of the led
+        """
         return self.pcf.read(7)
 
     def set_led_state(self, val):
+        """
+        Sets the led
+        """
         self.pcf.write(7, val)
 
     def toggle_led_state(self):
+        """
+        Toggles the led
+        """
         self.set_led_state(0 if self.get_led_state() else 1)
 
 class IRQ:
+    """
+    This class is for handling interrupts. It should not be edited.
+    It handles interrupts which stores button presses on a buffer.
+    get_pressed_button() is used to get a button press in FIFO order
+    clear_buffer() is used to clear the internal list of button presses
+    """
     def __init__(self, i2c):
         self.b = Buttons(i2c)
         self.buttonBuffer = []
@@ -139,9 +174,15 @@ class IRQ:
         return pressedButton
 
     def clear_buffer(self):
+        """
+        Clears internal list of pressed buttons.
+        """
         self.buttonBuffer.clear()
 
 class Screen:
+    """
+    This class is used for drawing to the screen
+    """
     def __init__(self,  i2c):
         self.lcd = SSD1306_I2C(128, 64, i2c)
 
@@ -186,8 +227,17 @@ class Screen:
         """
         self.lcd.fill(color)
 
-class Boilerboard:
+    def text(self, text, x, y):
+        """
+        Write text to the screen at coordinates x,y
+        """
+        self.lcd.text(text, x, y)
 
+class Boilerboard:
+    """
+    This is the main class for the boilerboard
+    Initiate with `b = Boilerboard()` and make class to `b` as needed
+    """
     def __init__(self):
         """
         Initialize interface to boilerboard
